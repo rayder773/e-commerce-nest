@@ -28,3 +28,10 @@ export const databaseConfig: IDatabaseConfig = {
     dialect: process.env.DB_DIALECT,
   },
 };
+
+export const describeSeeder = (tableName, data = []) => {
+  return {
+    up: (queryInterface) => queryInterface.bulkInsert(tableName, data, {}),
+    down: (queryInterface) => queryInterface.bulkDelete(tableName, null),
+  };
+};
