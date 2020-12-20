@@ -5,10 +5,10 @@ import { Product } from './product.entity';
 
 @Injectable()
 export class ProductService {
-
-  constructor(@Inject(PRODUCT_REPOSITORY) private readonly productRepository: typeof Product) { }
-
-
+  constructor(
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: typeof Product,
+  ) {}
 
   // async create(user: ProductDto): Promise<Product> {
   //   return await this.productRepository.create<Product>(user);

@@ -30,7 +30,7 @@ export const databaseProviders = [
   {
     provide: SEQUELIZE,
     useFactory: async () => {
-      await sync();
+      await sync(true);
       return sequelize;
     },
   },

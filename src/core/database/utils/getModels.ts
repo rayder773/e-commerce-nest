@@ -21,7 +21,8 @@ export const getModels = async () => {
       const entity = await import(
         `../../../models/${modelFolder}/${modelFolder}.entity`
       );
-      entities.push(entity[toCapital(modelFolder)]);
+
+      entities.push(...Object.values(entity));
     }
   }
 

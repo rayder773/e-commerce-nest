@@ -1,13 +1,15 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { ProductTranslation } from '../product-translation/product-translation.entity';
 
 @Table
 export class Product extends Model {
   @Column({
-    type: DataType.UUID,
+    type: DataType.INTEGER,
     allowNull: false,
     primaryKey: true,
+    unique: true,
   })
-  id: string;
+  id: number;
 
   @Column({
     type: DataType.INTEGER,
@@ -39,4 +41,7 @@ export class Product extends Model {
     defaultValue: +new Date(),
   })
   updatedAt: number;
+
+  @HasMany(() => ProductTranslation)
+  translations: ProductTranslation[];
 }
