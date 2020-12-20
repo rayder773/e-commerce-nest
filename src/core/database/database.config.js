@@ -1,9 +1,6 @@
-import * as dotenv from 'dotenv';
-import { IDatabaseConfig } from './interfaces/dbConfig.interface';
+require('dotenv').config();
 
-dotenv.config();
-
-export const databaseConfig: IDatabaseConfig = {
+module.exports = {
   development: {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
@@ -27,11 +24,4 @@ export const databaseConfig: IDatabaseConfig = {
     host: process.env.DB_HOST,
     dialect: process.env.DB_DIALECT,
   },
-};
-
-export const describeSeeder = (tableName, data = []) => {
-  return {
-    up: (queryInterface) => queryInterface.bulkInsert(tableName, data, {}),
-    down: (queryInterface) => queryInterface.bulkDelete(tableName, null),
-  };
 };

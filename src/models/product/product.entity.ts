@@ -25,4 +25,18 @@ export class Product extends Model {
     type: DataType.INTEGER,
   })
   compareAtPrice: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: false,
+    defaultValue: +new Date(),
+  })
+  createdAt: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: false,
+    defaultValue: +new Date(),
+  })
+  updatedAt: number;
 }

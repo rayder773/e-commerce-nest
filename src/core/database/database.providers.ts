@@ -1,29 +1,37 @@
 import { Sequelize } from 'sequelize-typescript';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { databaseConfig } from './database.config';
-import { Product } from '../../product/product.entity';
+import { getModels } from './utils/getModels';
 
-export const databaseProviders = [{
-  provide: SEQUELIZE,
-  useFactory: async () => {
-    let config;
-    switch (process.env.NODE_ENV) {
-      case DEVELOPMENT:
-        config = databaseConfig.development;
-        break;
-      case TEST:
-        config = databaseConfig.test;
-        break;
-      case PRODUCTION:
-        config = databaseConfig.production;
-        break;
-      default:
-        config = databaseConfig.development;
-    }
+let config;
+switch (process.env.NODE_ENV) {
+  case DEVELOPMENT:
+    config = databaseConfig.development;
+    break;
+  case TEST:
+    config = databaseConfig.test;
+    break;
+  case PRODUCTION:
+    config = databaseConfig.production;
+    break;
+  default:
+    config = databaseConfig.development;
+}
 
-    const sequelize = new Sequelize(config);
-    sequelize.addModels([Product]);
-    await sequelize.sync({force: true});
-    return sequelize;
+const sequelize = new Sequelize(config);
+
+async function sync(force = false) {
+  const models = await getModels();
+  sequelize.addModels(models);
+  await sequelize.sync({ force });
+}
+
+export const databaseProviders = [
+  {
+    provide: SEQUELIZE,
+    useFactory: async () => {
+      await sync();
+      return sequelize;
+    },
   },
-}];
+];
