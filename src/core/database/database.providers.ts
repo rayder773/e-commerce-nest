@@ -22,7 +22,6 @@ const sequelize = new Sequelize(config);
 
 async function sync(force = false) {
   const models = await getModels();
-  console.log('models', models)
   sequelize.addModels(models);
   await sequelize.sync({ force });
 }
