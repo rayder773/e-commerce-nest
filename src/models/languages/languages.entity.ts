@@ -4,7 +4,9 @@ import {
   Model,
   DataType,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { Settings } from '../settings/settings.entity';
 
 @Table
 export class Languages extends Model {
@@ -36,6 +38,6 @@ export class Languages extends Model {
   })
   updatedAt: number;
 
-  // @ForeignKey(() => Product)
-  // product_id: string;
+  @HasMany(() => Settings)
+  settings: Settings[];
 }
