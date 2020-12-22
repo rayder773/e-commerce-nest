@@ -7,6 +7,7 @@ import { SettingsModule } from './models/settings/settings.module';
 import { AuthModule } from './models/auth/auth.module';
 import { ProductTranslationModule } from './models/product-translation/product-translation.module';
 import { LanguagesModule } from './models/languages/languages.module';
+import { CategoriesModule } from './models/categories/categories.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LanguagesModule } from './models/languages/languages.module';
     DatabaseModule,
     ProductTranslationModule,
     LanguagesModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
