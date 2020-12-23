@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
-import { databaseConfig } from './database.config';
 import { getModels } from './utils/getModels';
+const databaseConfig = require('./database.config.js');
 
 let config;
 switch (process.env.NODE_ENV) {
@@ -22,7 +22,7 @@ const sequelize = new Sequelize(config);
 
 async function sync(force = false) {
   const models = await getModels();
-  console.log('models', models)
+  console.log('models', models);
   sequelize.addModels(models);
   await sequelize.sync({ force });
 }
