@@ -2,8 +2,112 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
+const { toCapitalize } = require('./utils');
+
 const createDir = util.promisify(fs.mkdir);
 const appendFile = util.promisify(fs.appendFile);
+const writeFile = util.promisify(fs.writeFile);
+const readFile = util.promisify(fs.readFile);
+
+function getControllerFile(module) {
+  return `
+import { Controller } from '@nestjs/common';
+
+@Controller('')
+export class ${toCapitalize(module)}Controller {}
+`;
+}
+
+function getEntityFile(module) {
+  return `
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
+
+@Table
+export class ${toCapitalize(module)} extends Model {
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    unique: true,
+  })
+  id: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: false,
+    defaultValue: +new Date(),
+  })
+  createdAt: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: false,
+    defaultValue: +new Date(),
+  })
+  updatedAt: number;
+}
+`;
+}
+
+function getModuleFile(module) {
+  const nameToCapital = toCapitalize(module);
+
+  return `
+import { Module } from '@nestjs/common';
+import { ${nameToCapital}Controller } from './${module}.controller';
+import { ${module}Provider } from './${module}.provider';
+import { ${nameToCapital}Service } from './${module}.service';
+
+@Module({
+  controllers: [${nameToCapital}Controller],
+  providers: [${nameToCapital}Service, ...${module}Provider],
+  exports: [${nameToCapital}Service],
+})
+export class ${nameToCapital}Module {}`;
+}
+
+function getProviderFile(module) {
+  const nameToCapital = toCapitalize(module);
+  const nameToUpper = module.toUpperCase();
+
+  return `
+import { ${nameToCapital} } from './${module}.entity';
+import { ${nameToUpper}_REPOSITORY } from '../../core/constants';
+
+export const ${module}Provider = [
+  {
+    provide: ${nameToUpper}_REPOSITORY,
+    useValue: ${nameToCapital},
+  },
+];
+`;
+}
+function getServiceFile(module) {
+  const nameToCapital = toCapitalize(module);
+  const nameToUpper = module.toUpperCase();
+
+  return `
+import { Injectable, Inject } from '@nestjs/common';
+import { ${nameToUpper}_REPOSITORY } from '../../core/constants';
+import { ${nameToCapital} } from './${module}.entity';
+
+@Injectable()
+export class ${nameToCapital}Service {
+  constructor(
+    @Inject(${nameToUpper}_REPOSITORY)
+    private readonly ${module}Repository: typeof ${nameToCapital},
+  ) {}
+}
+`;
+}
+
+const files = {
+  controller: getControllerFile,
+  entity: getEntityFile,
+  module: getModuleFile,
+  provider: getProviderFile,
+  service: getServiceFile,
+};
 
 const createNewModule = async () => {
   const model = (process.argv[2] && process.argv[2]) || '';
@@ -13,13 +117,29 @@ const createNewModule = async () => {
   }
 
   try {
-    const fileName = ['controller', 'entity', 'module', 'provider', 'service'];
-
     await createDir(`src/models/${model}`);
 
-    for (let i = 0; i < fileName.length; i++) {
-      await appendFile(`src/models/${model}/${fileName[i]}.js`, 'sadasd');
+    const fileNames = Object.keys(files);
+
+    for (let i = 0; i < fileNames.length; i++) {
+      const nameOfCurrentFile = `src/models/${model}/${model}.${fileNames[i]}.ts`;
+      const contentOfCurrentFile = files[fileNames[i]](model).trim();
+
+      await appendFile(nameOfCurrentFile, contentOfCurrentFile);
     }
+
+    const constantFile = await readFile('src/core/constants/index.ts', 'utf8');
+    const newConstantFile =
+      constantFile +
+      `export const ${model.toUpperCase()}_REPOSITORY = '${model.toUpperCase()}_REPOSITORY';\n`;
+
+    await writeFile('src/core/constants/index.ts', newConstantFile);
+
+    const appModuleFile = await readFile('src/app.module.ts', 'utf8');
+    console.log('appModuleFile', appModuleFile.split('\n'))
+    // const newAppModuleFile =
+    //   constantFile +
+    //   `export const ${model.toUpperCase()}_REPOSITORY = '${model.toUpperCase()}_REPOSITORY';\n`;
   } catch (err) {
     return console.error('custom', err);
   }
