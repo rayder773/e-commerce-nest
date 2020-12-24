@@ -1,27 +1,36 @@
 require('dotenv').config();
 
+const config = {
+  user: process.env.DB_USER || 'root',
+  pass: process.env.DB_PASS || '1',
+  name: process.env.DB_NAME || 'shop',
+  host: process.env.DB_HOST || 'db',
+  port: process.env.DB_PORT || '5432',
+  dialect: process.env.DB_DIALECT || 'postgres',
+};
+
 module.exports = {
   development: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT,
+    username: config.user,
+    password: config.pass,
+    database: config.name,
+    host: config.host,
+    port: config.port,
+    dialect: config.dialect,
   },
   test: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT,
+    username: config.user,
+    password: config.pass,
+    database: config.name,
+    host: config.host,
+    port: config.port,
+    dialect: config.dialect,
   },
   production: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
+    username: config.user,
+    password: config.pass,
+    database: config.name,
+    host: config.host,
+    dialect: config.dialect,
   },
 };

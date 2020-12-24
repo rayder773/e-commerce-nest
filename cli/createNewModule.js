@@ -134,12 +134,29 @@ const createNewModule = async () => {
       `export const ${model.toUpperCase()}_REPOSITORY = '${model.toUpperCase()}_REPOSITORY';\n`;
 
     await writeFile('src/core/constants/index.ts', newConstantFile);
+    const appModulePath = 'src/app.module.ts';
 
-    const appModuleFile = await readFile('src/app.module.ts', 'utf8');
-    console.log('appModuleFile', appModuleFile.split('\n'))
-    // const newAppModuleFile =
-    //   constantFile +
-    //   `export const ${model.toUpperCase()}_REPOSITORY = '${model.toUpperCase()}_REPOSITORY';\n`;
+    const appModuleFile = await readFile(appModulePath, 'utf8');
+    const imports = appModuleFile.match(/import(.*?);/g).join('\n') || '';
+    const importedModules = appModuleFile.match(/imports: \[(.*?)\]/s)[0] || '';
+
+    if (!imports.length || !importedModules.length) {
+      return false;
+    }
+
+    const importedModuleName = `${toCapitalize(model)}Module`;
+    const newImports =
+      imports +
+      `\n${importedModuleName} from './models/${model}/${model}.module';`;
+
+    const newImportedModules = importedModules.split(',');
+    newImportedModules.splice(-1, 0, `\n\t${importedModuleName}`);
+
+    const newAppModuleFile = appModuleFile
+      .replace(imports, newImports)
+      .replace(importedModules, newImportedModules);
+
+    await writeFile(appModulePath, newAppModuleFile);
   } catch (err) {
     return console.error('custom', err);
   }
