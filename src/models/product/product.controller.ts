@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller()
+@Controller('api/v1')
 export class ProductController {
-  @Get('api/allProducts')
+  @Get('allProducts')
   findAllSpeakers(): any {
     return 'all products, bitch dsadsa';
   }
