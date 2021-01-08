@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ProductDto } from './dto/product.dto';
+import { createProductDto } from './dto/product.dto';
 import { PRODUCT_REPOSITORY } from '../../core/constants';
 import { Product } from './product.entity';
 
@@ -10,9 +10,9 @@ export class ProductService {
     private readonly productRepository: typeof Product,
   ) {}
 
-  // async create(user: ProductDto): Promise<Product> {
-  //   return await this.productRepository.create<Product>(user);
-  // }
+  async createProduct(product: createProductDto): Promise<Product> {
+    return await this.productRepository.create<Product>(product);
+  }
   //
   // async findOneByEmail(email: string): Promise<Product> {
   //   return await this.productRepository.findOne<Product>({ where: { email } });

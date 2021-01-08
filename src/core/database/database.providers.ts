@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { getModels } from './utils/getModels';
-const { databaseConfig } = require('./database.config.js');
+const databaseConfig = require('./database.config.js');
 
 let config;
 const mode = process.env.NODE_ENV || DEVELOPMENT;
