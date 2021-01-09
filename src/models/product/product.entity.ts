@@ -4,12 +4,12 @@ import { ProductTranslation } from '../product-translation/product-translation.e
 @Table
 export class Product extends Model {
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
     unique: true,
   })
-  id: number;
+  id: string;
 
   @Column({
     type: DataType.INTEGER,

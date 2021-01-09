@@ -8,12 +8,12 @@ const PRODUCT_ARCHIVED = 'archived';
 @Table
 export class ProductTranslation extends Model {
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
     unique: true,
   })
-  id: number;
+  id: string;
 
   @Column({
     type: DataType.STRING,
