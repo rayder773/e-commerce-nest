@@ -1,7 +1,10 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
 import { ProductTranslation } from '../product-translation/product-translation.entity';
 
-@Table
+@Table({
+  paranoid: true,
+  deletedAt: 'destroyTime',
+})
 export class Product extends Model {
   @Column({
     type: DataType.UUID,
