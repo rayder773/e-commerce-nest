@@ -1,9 +1,9 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table
-export class Categories extends Model {
+export class Category extends Model {
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
     primaryKey: true,
     unique: true,
@@ -15,6 +15,11 @@ export class Categories extends Model {
     allowNull: false,
   })
   name: string;
+
+  @Column({
+    type: DataType.UUID,
+  })
+  parentId: string;
 
   @Column({
     type: DataType.BIGINT,
