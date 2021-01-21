@@ -1,8 +1,7 @@
 const fs = require('fs');
-const path = require('path');
 const util = require('util');
 
-const { toCapitalize } = require('./utils');
+const { toCapitalize, toPlural } = require('./utils');
 
 const createDir = util.promisify(fs.mkdir);
 const appendFile = util.promisify(fs.appendFile);
@@ -85,11 +84,13 @@ export const ${module}Provider = [
 function getServiceFile(module) {
   const nameToCapital = toCapitalize(module);
   const nameToUpper = module.toUpperCase();
+  const nameToPlural = toPlural(nameToCapital);
 
   return `
 import { Injectable, Inject } from '@nestjs/common';
 import { ${nameToUpper}_REPOSITORY } from '../../core/constants';
 import { ${nameToCapital} } from './${module}.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ${nameToCapital}Service {
@@ -97,6 +98,28 @@ export class ${nameToCapital}Service {
     @Inject(${nameToUpper}_REPOSITORY)
     private readonly ${module}Repository: typeof ${nameToCapital},
   ) {}
+  
+  async getAll${nameToPlural}(): Promise<${nameToCapital}[]> {
+    return await this.${module}Repository.findAll();
+  }
+  
+  async create${nameToCapital}(category): Promise<${nameToCapital}> {
+    return await this.${module}Repository.create<${nameToCapital}>({
+      id: uuidv4(),
+      ...${module},
+    });
+  }
+  
+  async update${nameToCapital}(
+    updated${nameToCapital}: update${nameToCapital}Dto,
+  ): Promise<[number, ${nameToCapital}[]]> {
+    return await this.${module}Repository.update(updated${nameToCapital}, {
+      where: {
+        id: updated${nameToCapital}.id,
+      },
+    });
+  }
+
 }
 `;
 }
