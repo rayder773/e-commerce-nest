@@ -81,6 +81,25 @@ export const ${module}Provider = [
 ];
 `;
 }
+
+function getDtoFile(module) {
+  const nameToCapital = toCapitalize(module);
+
+  return `
+import { ApiProperty } from '@nestjs/swagger';
+
+export class create${nameToCapital}Dto {
+}
+
+export class delete${nameToCapital}Dto {
+}
+
+export class update${nameToCapital}Dto {
+}
+
+  `;
+}
+
 function getServiceFile(module) {
   const nameToCapital = toCapitalize(module);
   const nameToUpper = module.toUpperCase();
@@ -88,9 +107,10 @@ function getServiceFile(module) {
 
   return `
 import { Injectable, Inject } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { update${nameToCapital}Dto } from './dto/${module}.dto';
 import { ${nameToUpper}_REPOSITORY } from '../../core/constants';
 import { ${nameToCapital} } from './${module}.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ${nameToCapital}Service {
@@ -103,7 +123,7 @@ export class ${nameToCapital}Service {
     return await this.${module}Repository.findAll();
   }
   
-  async create${nameToCapital}(category): Promise<${nameToCapital}> {
+  async create${nameToCapital}(${module}): Promise<${nameToCapital}> {
     return await this.${module}Repository.create<${nameToCapital}>({
       id: uuidv4(),
       ...${module},
@@ -130,6 +150,7 @@ const files = {
   module: getModuleFile,
   provider: getProviderFile,
   service: getServiceFile,
+  dto: getDtoFile,
 };
 
 const createNewModule = async () => {
@@ -150,6 +171,12 @@ const createNewModule = async () => {
 
       await appendFile(nameOfCurrentFile, contentOfCurrentFile);
     }
+
+    await createDir(`src/models/${model}/dto`);
+    await appendFile(
+      `src/models/${model}/dto/${model}.dto.ts`,
+      files.dto(model),
+    );
 
     const constantFile = await readFile('src/core/constants/index.ts', 'utf8');
     const newConstantFile =
