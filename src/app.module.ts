@@ -8,6 +8,7 @@ import { AuthModule } from './models/auth/auth.module';
 import { ProductTranslationModule } from './models/product-translation/product-translation.module';
 import { LanguagesModule } from './models/languages/languages.module';
 import { CategoriesModule } from './models/categories/categories.module';
+ProductAttributesModule from './models/productAttributes/productAttributes.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CategoriesModule } from './models/categories/categories.module';
     ProductTranslationModule,
     LanguagesModule,
     CategoriesModule,
+	ProductAttributesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

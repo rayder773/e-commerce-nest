@@ -95,6 +95,8 @@ export class delete${nameToCapital}Dto {
 }
 
 export class update${nameToCapital}Dto {
+  @ApiProperty()
+  readonly id: string;
 }
 
   `;
