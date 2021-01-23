@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-import { ProductTranslation } from '../product-translation/product-translation.entity';
+import { ProductAttributes } from '../productAttributes/productAttributes.entity';
 
 @Table({
   paranoid: true,
@@ -45,6 +45,6 @@ export class Product extends Model {
   })
   updatedAt: number;
 
-  @HasMany(() => ProductTranslation)
-  translations: ProductTranslation[];
+  @HasMany(() => ProductAttributes)
+  productAttributes: ProductAttributes[];
 }

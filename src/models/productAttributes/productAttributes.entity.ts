@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, ForeignKey, HasMany} from 'sequelize-typescript';
+import {Product} from "../product/product.entity";
+import {ProductTranslation} from "../product-translation/product-translation.entity";
 
 @Table
 export class ProductAttributes extends Model {
@@ -23,4 +25,10 @@ export class ProductAttributes extends Model {
     defaultValue: +new Date(),
   })
   updatedAt: number;
+
+  @HasMany(() => ProductTranslation)
+  productTranslations: ProductTranslation[];
+
+  @ForeignKey(() => Product)
+  product_id: string;
 }

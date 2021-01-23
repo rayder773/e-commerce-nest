@@ -1,5 +1,5 @@
 import {Table, Column, Model, DataType, ForeignKey} from 'sequelize-typescript';
-import {Product} from "../product/product.entity";
+import {ProductAttributes} from "../productAttributes/productAttributes.entity";
 
 const PRODUCT_ACTIVE = 'active';
 const PRODUCT_DRAFT = 'draft';
@@ -53,8 +53,8 @@ export class ProductTranslation extends Model {
   })
   updatedAt: number;
 
-  @ForeignKey(() => Product)
-  product_id: string;
+  @ForeignKey(() => ProductAttributes)
+  product_attribute_id: string;
 }
 
 function getProductStatuses(): string[] {
