@@ -8,7 +8,7 @@ import { AuthModule } from './models/auth/auth.module';
 import { ProductTranslationModule } from './models/product-translation/product-translation.module';
 import { LanguagesModule } from './models/languages/languages.module';
 import { CategoriesModule } from './models/categories/categories.module';
-ProductAttributesModule from './models/productAttributes/productAttributes.module';
+import { ProductAttributesModule } from './models/productAttributes/productAttributes.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ ProductAttributesModule from './models/productAttributes/productAttributes.modul
     ProductTranslationModule,
     LanguagesModule,
     CategoriesModule,
-	ProductAttributesModule,
+    ProductAttributesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

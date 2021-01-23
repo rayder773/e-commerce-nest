@@ -14,6 +14,7 @@ import { Controller } from '@nestjs/common';
 
 @Controller('')
 export class ${toCapitalize(module)}Controller {}
+
 `;
 }
 
@@ -45,6 +46,7 @@ export class ${toCapitalize(module)} extends Model {
   })
   updatedAt: number;
 }
+
 `;
 }
 
@@ -62,7 +64,9 @@ import { ${nameToCapital}Service } from './${module}.service';
   providers: [${nameToCapital}Service, ...${module}Provider],
   exports: [${nameToCapital}Service],
 })
-export class ${nameToCapital}Module {}`;
+export class ${nameToCapital}Module {}
+
+`;
 }
 
 function getProviderFile(module) {
@@ -79,6 +83,7 @@ export const ${module}Provider = [
     useValue: ${nameToCapital},
   },
 ];
+
 `;
 }
 
@@ -141,8 +146,8 @@ export class ${nameToCapital}Service {
       },
     });
   }
-
 }
+
 `;
 }
 
@@ -199,7 +204,7 @@ const createNewModule = async () => {
     const importedModuleName = `${toCapitalize(model)}Module`;
     const newImports =
       imports +
-      `\n${importedModuleName} from './models/${model}/${model}.module';`;
+      `\nimport { ${importedModuleName} } from './models/${model}/${model}.module';`;
 
     const newImportedModules = importedModules.split(',');
     newImportedModules.splice(-1, 0, `\n\t${importedModuleName}`);
